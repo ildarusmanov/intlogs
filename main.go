@@ -5,6 +5,8 @@ import (
 	"intlogs/controllers"
 	"intlogs/middleware"
 	"fmt"
+
+	"github.com/ildarusmanov/negroni"
 )
 
 func main() {
@@ -28,10 +30,10 @@ func main() {
 	router.HandleFunc("/get", controller.IndexHandler).Methods("GET")
 
 	fmt.Println("Define middleware")
-	mhandlers := middleware.CreateNewMiddlewareHandlers()
-	mhandlers = append(mhandlers, middleware.CreateNewAuth(config.AuthToken))
-	mhandler := mhandlers.GetHandler(router)
+	n := negroni.New()
+	n.UseHandler(middleware.CreateNewAuth(config.AuthToken))
+	n.UseHandler(router)
 
 	fmt.Println("Start web-server")
-	StartServer(mhandler, config)
+	StartServer(n, config)
 }
