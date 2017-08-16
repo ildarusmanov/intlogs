@@ -3,6 +3,7 @@ package main
 import (
 	"intlogs/configs"
 	"intlogs/controllers"
+	"intlogs/middleware"
 	"fmt"
 )
 
@@ -26,6 +27,10 @@ func main() {
 	router.HandleFunc("/create",controller.CreateHandler).Methods("POST")
 	router.HandleFunc("/get", controller.IndexHandler).Methods("GET")
 
+	fmt.Println("Define middleware")
+	mhandlers := middleware.CreateNewMiddlwareHandlers()
+	mhandler := mhandlers.GetHandler(router)
+
 	fmt.Println("Start web-server")
-	StartServer(router, config)
+	StartServer(mhandler, config)
 }

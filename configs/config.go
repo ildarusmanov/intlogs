@@ -12,6 +12,7 @@ type Config struct {
 	ServerHost string `yaml:"server_host"`
 	MgoUrl     string `yaml:"mgo_url"`
 	MgoDb      string `yaml:"mgo_db"`
+	AuthToken  string `yaml:"auth_koen"`
 }
 
 func CreateNewConfig() *Config {
