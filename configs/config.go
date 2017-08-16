@@ -1,7 +1,6 @@
 package configs
 
 import (
-    "fmt"
     "io/ioutil"
     "path/filepath"
 

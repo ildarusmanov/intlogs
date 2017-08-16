@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"intlogs/configs"
-
 	"net/http"
 )
 
@@ -10,13 +8,13 @@ type MiddlewareHandler interface {
 	Exec(w http.ResponseWriter, r *http.Request) bool
 }
 
-type MiddlewareHandlers []http.MiddlewareHandler
+type MiddlewareHandlers []MiddlewareHandler
 
-func CreateNewMiddlewareHandlers() *MiddlewareHandlers {
-	return &MiddlewareHandlers{}
+func CreateNewMiddlewareHandlers() MiddlewareHandlers {
+	return MiddlewareHandlers{}
 }
 
-func (mHandlers *MiddlewareHandlers) GetHandler(finalH http.Handler) http.Handler {
+func (mHandlers MiddlewareHandlers) GetHandler(finalH http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		for _, h := range mHandlers {
 			if (!h.Exec(w, r)) {
@@ -24,6 +22,6 @@ func (mHandlers *MiddlewareHandlers) GetHandler(finalH http.Handler) http.Handle
 			}
 		}
 
-		finalH.serveHTTP(w, r)
+		finalH.ServeHTTP(w, r)
 	})
 }

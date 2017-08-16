@@ -6,13 +6,11 @@ import (
 	"net/http"
 	"log"
 	"time"
-
-	"github.com/gorilla/mux"
 )
 
-func StartServer(router *mux.Router, config *configs.Config) {
+func StartServer(handler http.Handler, config *configs.Config) {
     srv := &http.Server{
-        Handler:      router,
+        Handler:      handler,
         Addr:         config.ServerHost,
         // Good practice: enforce timeouts for servers you create!
         WriteTimeout: 15 * time.Second,

@@ -28,7 +28,7 @@ func main() {
 	router.HandleFunc("/get", controller.IndexHandler).Methods("GET")
 
 	fmt.Println("Define middleware")
-	mhandlers := middleware.CreateNewMiddlwareHandlers()
+	mhandlers := middleware.CreateNewMiddlewareHandlers()
 	mhandlers = append(mhandlers, middleware.CreateNewAuth(config.AuthToken))
 	mhandler := mhandlers.GetHandler(router)
 
