@@ -2,7 +2,6 @@ package main
 
 import (
 	"intlogs/configs"
-	"intlogs/controllers"
 	"intlogs/middlewares"
 	"fmt"
 
@@ -20,14 +19,7 @@ func main() {
 	defer mgoSession.Close()
 
 	fmt.Println("Create router")
-	router := CreateNewRouter()
-
-	fmt.Println("Create controller")
-	controller := controllers.CreateNewActionLogController(mgoSession, config)
-
-	fmt.Println("Define routes")
-	router.HandleFunc("/create",controller.CreateHandler).Methods("POST")
-	router.HandleFunc("/get", controller.IndexHandler).Methods("GET")
+	router := CreateNewRouter(mgoSession, config)
 
 	fmt.Println("Define middleware")
 	mware := middleware.CreateNewMiddleware()

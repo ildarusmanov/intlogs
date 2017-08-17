@@ -11,7 +11,7 @@ type ActionLogStore struct {
 }
 
 func CreateNewActionLogStore(collection *mgo.Collection) *ActionLogStore {
-	return &ActionLogStore{}
+	return &ActionLogStore{collection}
 }
 
 func (store *ActionLogStore) Save(log *models.ActionLog) *models.ActionLog {
@@ -20,8 +20,8 @@ func (store *ActionLogStore) Save(log *models.ActionLog) *models.ActionLog {
 	return log
 }
 
-func (store *ActionLogStore) All(logs *models.ActionLogCollection) *models.ActionLogCollection {
-	store.collection.Find(nil).All(logs)
+func (store *ActionLogStore) All(logs *models.ActionLogCollection, limit int, offset int) *models.ActionLogCollection {
+	store.collection.Find(nil).Limit(limit).Skip(offset).All(logs)
 
 	return logs
 }

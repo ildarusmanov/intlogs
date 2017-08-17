@@ -11,5 +11,7 @@ func CreateMgoSession(url string) *mgo.Session {
 		panic(err)
 	}
 
+	session.SetMode(mgo.Monotonic, true)
+
 	return session
 }

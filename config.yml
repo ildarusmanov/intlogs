@@ -1,4 +1,4 @@
 server_host: "127.0.0.1:8000"
 mgo_url: "localhost"
-mgo_db: "logs"
+mgo_db: "intlogs"
 auth_token: "super-token"
