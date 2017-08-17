@@ -13,9 +13,12 @@ func CreateNewAuth(authToken string) Auth {
 }
 
 func (a Auth) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	isValidToken := a.AuthToken == r.URL.Query().Get("token")
+    isValidToken := a.AuthToken == r.URL.Query().Get("token")
 
-	if (!isValidToken) {
-		panic("Invalid auth token")
-	}
+    if (!isValidToken) {
+    	w.WriteHeader(403)
+    	w.Write([]byte("Forbidden"))
+   
+ 		panic("Invalid token")
+    }
 }
