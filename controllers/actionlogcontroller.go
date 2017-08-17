@@ -3,6 +3,7 @@ package controllers
 import (
 	"intlogs/configs"
 	"intlogs/models"
+	"intlogs/stores"
 
 	"net/http"
 
@@ -12,12 +13,14 @@ import (
 )
 
 type ActionLogController struct {
-	mgoSession *mgo.Session
-	config *configs.Config
+	store *stores.ActionLogStore
 }
 
 func CreateNewActionLogController(mgoSession *mgo.Session,config *configs.Config) *ActionLogController {
-	return &ActionLogController{mgoSession, config}
+	collection := mgoSession.DB(config.MgoDb).C("action_logs")
+	store := stores.CreateNewActionLogStore(collection)
+
+	return &ActionLogController{store}
 }
 
 func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,11 +42,9 @@ func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Reque
     if err != nil {
    		panic(err)
     }
-
- 	/**
- 	 * @todo add save logic
- 	 */
  
+ 	c.store.Save(log)
+
     if err = json.NewEncoder(w).Encode(log); err != nil {
         panic(err)
     }
@@ -54,6 +55,8 @@ func (c *ActionLogController) IndexHandler(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusOK)
 
 	logs := models.CreateNewActionLogCollection()
+	
+	c.store.All(logs)
 
     if err := json.NewEncoder(w).Encode(logs); err != nil {
         panic(err)

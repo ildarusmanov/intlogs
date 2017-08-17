@@ -3,8 +3,10 @@ package main
 import (
 	"intlogs/configs"
 	"intlogs/controllers"
-	"intlogs/middleware"
+	"intlogs/middlewares"
 	"fmt"
+
+	"github.com/WajoxSoftware/middleware"
 )
 
 func main() {
@@ -29,7 +31,7 @@ func main() {
 
 	fmt.Println("Define middleware")
 	mware := middleware.CreateNewMiddleware()
-	mware.AddHandler(middleware.CreateNewAuth(config.AuthToken))
+	mware.AddHandler(middlewares.CreateNewAuth(config.AuthToken))
 	mware.AddHandler(router)
 
 	fmt.Println("Start web-server")
