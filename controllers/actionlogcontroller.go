@@ -4,10 +4,8 @@ import (
 	"intlogs/configs"
 	"intlogs/models"
 	"intlogs/stores"
-
 	"net/http"
 	"strconv"
-
 	"gopkg.in/mgo.v2"
 	"github.com/gorilla/schema"
 	"encoding/json"
@@ -29,9 +27,6 @@ func CreateNewActionLogController(mgoSession *mgo.Session,config *configs.Config
 }
 
 func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-
     err := r.ParseForm()
 
     if err != nil {
@@ -56,9 +51,6 @@ func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func (c *ActionLogController) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 
 	if (err != nil) {

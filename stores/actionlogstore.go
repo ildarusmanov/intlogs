@@ -2,7 +2,6 @@ package stores
 
 import (
 	"intlogs/models"
-
 	"gopkg.in/mgo.v2"
 )
 

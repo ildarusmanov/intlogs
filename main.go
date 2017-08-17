@@ -24,6 +24,7 @@ func main() {
 	fmt.Println("Define middleware")
 	mware := middleware.CreateNewMiddleware()
 	mware.AddHandler(middlewares.CreateNewAuth(config.AuthToken))
+	mware.AddHandler(middlewares.CreateNewJsonOkResponse())
 	mware.AddHandler(router)
 
 	fmt.Println("Start web-server")
