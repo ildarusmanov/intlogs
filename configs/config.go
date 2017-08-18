@@ -2,8 +2,6 @@ package configs
 
 import (
     "io/ioutil"
-    "path/filepath"
-
     "gopkg.in/yaml.v2"
 )
 
@@ -18,10 +16,9 @@ func CreateNewConfig() *Config {
 	return &Config{}
 }
 
-func LoadConfigFile() *Config {
+func LoadConfigFile(configFilePath string) *Config {
 	configData := CreateNewConfig()
 
-	configFilePath, _ := filepath.Abs("./config.yml")
 	configFileData, err := ioutil.ReadFile(configFilePath)
 
 	if (err != nil) {

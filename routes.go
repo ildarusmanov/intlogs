@@ -10,11 +10,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func CreateNewRouter(mgoSession *mgo.Session, config *configs.Config) *mux.Router {
+func CreateNewRouter(dbSession *mgo.Session, config *configs.Config) *mux.Router {
 	router := mux.NewRouter()
 
 	fmt.Println("Create controller")
-	controller := controllers.CreateNewActionLogController(mgoSession, config)
+	controller := controllers.CreateNewActionLogController(dbSession, config)
 
 	fmt.Println("Define routes")
 	router.HandleFunc("/create", controller.CreateHandler).Methods("POST")

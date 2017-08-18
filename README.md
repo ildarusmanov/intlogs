@@ -1,4 +1,4 @@
-# Action logs service
+Action logs service
 ==========================
 
 ## Save some log data

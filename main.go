@@ -1,9 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"intlogs/db"
 	"intlogs/configs"
 	"intlogs/middlewares"
+
+	"fmt"
+	"path/filepath"
 
 	"github.com/WajoxSoftware/middleware"
 )
@@ -12,14 +15,15 @@ func main() {
 	fmt.Println("Starting application...")
 
 	fmt.Println("Load config")
-	config := configs.LoadConfigFile()
+	configFilePath, _ := filepath.Abs("./config.yml")
+	config := configs.LoadConfigFile(configFilePath)
 
 	fmt.Println("Open MongoDB session")
-	mgoSession := CreateMgoSession(config.MgoUrl)
-	defer mgoSession.Close()
+	dbSession := db.CreateSession(config.MgoUrl)
+	defer dbSession.Close()
 
 	fmt.Println("Create router")
-	router := CreateNewRouter(mgoSession, config)
+	router := CreateNewRouter(dbSession, config)
 
 	fmt.Println("Define middleware")
 	mware := middleware.CreateNewMiddleware()

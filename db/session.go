@@ -1,10 +1,10 @@
-package main
+package db
 
 import (
 	"gopkg.in/mgo.v2"
 )
 
-func CreateMgoSession(url string) *mgo.Session {
+func CreateSession(url string) *mgo.Session {
 	session, err := mgo.Dial(url)
 
 	if err != nil {
