@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strconv"
 	"gopkg.in/mgo.v2"
-	"github.com/gorilla/schema"
 	"encoding/json"
 )
 
 const (
 	PAGE_SIZE int = 0
+	COLLECTION_NAME string = "action_logs"
 )
 
 type ActionLogController struct {
@@ -20,7 +20,7 @@ type ActionLogController struct {
 }
 
 func CreateNewActionLogController(mgoSession *mgo.Session,config *configs.Config) *ActionLogController {
-	collection := mgoSession.DB(config.MgoDb).C("action_logs")
+	collection := mgoSession.DB(config.MgoDb).C(COLLECTION_NAME)
 	store := stores.CreateNewActionLogStore(collection)
 
 	return &ActionLogController{store}
@@ -35,10 +35,8 @@ func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Reque
 
     log := models.CreateNewActionLog()
 
-    decoder := schema.NewDecoder()
-    // r.PostForm is a map of our POST form values
-    err = decoder.Decode(log, r.PostForm)
-
+    err = json.NewDecoder(r.Body).Decode(log)
+ // r.PostForm is a map of our POST form values
     if err != nil {
    		panic(err)
     }

@@ -7,7 +7,7 @@ import (
 func CreateMgoSession(url string) *mgo.Session {
 	session, err := mgo.Dial(url)
 
-	if (err != nil) {
+	if err != nil {
 		panic(err)
 	}
 

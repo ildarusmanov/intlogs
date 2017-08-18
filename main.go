@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"intlogs/configs"
 	"intlogs/middlewares"
-	"fmt"
 
 	"github.com/WajoxSoftware/middleware"
 )
