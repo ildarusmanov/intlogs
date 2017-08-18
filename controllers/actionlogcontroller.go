@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"gopkg.in/mgo.v2"
 	"encoding/json"
+	"gopkg.in/validator.v2"
 )
 
 const (
@@ -40,6 +41,10 @@ func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Reque
     if err != nil {
    		panic(err)
     }
+
+	if err = validator.Validate(log); err != nil {
+		panic(err)
+	}
 
  	c.store.Save(log)
 
