@@ -1,8 +1,8 @@
 package main
 
 import (
-	"intlogs/db"
 	"intlogs/configs"
+	"intlogs/db"
 	"intlogs/middlewares"
 
 	"fmt"
