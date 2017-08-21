@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/validator.v2"
 	"testing"
 	"time"
@@ -21,8 +22,7 @@ func TestValidators(t *testing.T) {
 	validLog.GuestUserId = "some-guest-id"
 	validLog.Url = "http://test.com"
 	validLog.CreatedAt = time.Now().Unix()
-	validLog.Params = map[string]string{"key1": "value1"}
-	validLog.Tags = []string{"tag1"}
+	validLog.Params = bson.M{"key1": "value1"}
 
 	if err := validator.Validate(validLog); err != nil {
 		t.Error("Valid ActionLog model validation: Nil expected, but", err, "given")

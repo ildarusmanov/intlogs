@@ -5,10 +5,9 @@ import (
 	"intlogs/models"
 	"intlogs/tests"
 
+	"io/ioutil"
 	"bytes"
 	"testing"
-	"io/ioutil"
-	"net/http"
 	"net/http/httptest"
 	"encoding/json"
 )
@@ -28,18 +27,19 @@ func TestIndexHandler(t *testing.T) {
 
 	inBody := bytes.NewBufferString("")
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("GET", "/get", inBody)
+	r := httptest.NewRequest("GET", "http://127.0.0.1:8000/get?page=0", inBody)
 
 	controller.IndexHandler(w, r)
 
-	respBytes, _ := ioutil.ReadAll(r.Body)
-	
-	logs := models.CreateNewActionLogCollection()
-
-    if err := json.NewDecoder(bytes.NewBuffer(respBytes)).Decode(logs); err != nil {
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+	logs := models.MakeNewActionLogCollection()
+    
+    if err := json.Unmarshal(body, &logs); err != nil {
    		t.Error("Invalid json response")
     }
 }
+
 
 func TestCreateHandler(t *testing.T) {
 	defer func() {
@@ -58,16 +58,16 @@ func TestCreateHandler(t *testing.T) {
 	inBody := bytes.NewBufferString(bodyJson)
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/create", inBody)
+	r := httptest.NewRequest("POST", "http://127.0.0.1:8000/create", inBody)
 
-	controller.IndexHandler(w, r)
+	controller.CreateHandler(w, r)
 
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
 
-	respBytes, _ := ioutil.ReadAll(r.Body)
-	
 	log := models.CreateNewActionLog()
 
-    if err := json.NewDecoder(bytes.NewBuffer(respBytes)).Decode(log); err != nil {
+    if err := json.Unmarshal(body, log); err != nil {
    		t.Error("Invalid json response")
     }
 

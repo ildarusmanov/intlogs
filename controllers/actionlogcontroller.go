@@ -4,6 +4,7 @@ import (
 	"intlogs/configs"
 	"intlogs/models"
 	"intlogs/stores"
+
 	"net/http"
 	"strconv"
 	"gopkg.in/mgo.v2"
@@ -12,7 +13,7 @@ import (
 )
 
 const (
-	PAGE_SIZE int = 0
+	PAGE_SIZE int = 20
 	COLLECTION_NAME string = "action_logs"
 )
 
@@ -38,7 +39,9 @@ func (c *ActionLogController) CreateHandler(w http.ResponseWriter, r *http.Reque
 		panic(err)
 	}
 
- 	c.store.Save(log)
+ 	if _, err := c.store.Save(log); err != nil {
+ 		panic(err)
+ 	}
 
     if err := json.NewEncoder(w).Encode(log); err != nil {
         panic(err)
@@ -53,9 +56,11 @@ func (c *ActionLogController) IndexHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	logs := models.CreateNewActionLogCollection()
-	limit := PAGE_SIZE * page
+	offset := PAGE_SIZE * page
 	
-	c.store.All(logs, PAGE_SIZE, limit)
+	if _, err := c.store.All(logs, PAGE_SIZE, offset); err != nil {
+		panic(err)
+	}
 
     if err := json.NewEncoder(w).Encode(logs); err != nil {
         panic(err)
