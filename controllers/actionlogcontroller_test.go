@@ -40,7 +40,6 @@ func TestIndexHandler(t *testing.T) {
     }
 }
 
-
 func TestCreateHandler(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
