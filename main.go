@@ -23,13 +23,13 @@ func main() {
 	defer dbSession.Close()
 
 	fmt.Println("Create router")
-	router := CreateNewRouter(dbSession, config)
+	routerHandler := CreateNewRouterHandler(dbSession, config)
 
 	fmt.Println("Define middleware")
 	mware := middleware.CreateNewMiddleware()
 	mware.AddHandler(middlewares.CreateNewAuth(config.AuthToken))
 	mware.AddHandler(middlewares.CreateNewJsonOkResponse())
-	mware.AddHandler(router)
+	mware.AddHandler(routerHandler)
 
 	fmt.Println("Start web-server")
 	StartServer(mware, config)

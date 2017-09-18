@@ -3,22 +3,36 @@ package main
 import (
 	"intlogs/configs"
 	"intlogs/controllers"
-
-	"fmt"
+	"log"
 	"gopkg.in/mgo.v2"
-
 	"github.com/gorilla/mux"
+	"net/http"
 )
 
-func CreateNewRouter(dbSession *mgo.Session, config *configs.Config) *mux.Router {
+type RouterHandler struct {
+	router *mux.Router
+}
+
+func CreateNewRouterHandler(dbSession *mgo.Session, config *configs.Config) *RouterHandler {
+	return &RouterHandler{createNewRouter(dbSession, config)}
+}
+
+func (h *RouterHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) bool {
+	h.router.ServeHTTP(w,r)
+
+	return true
+}
+
+func createNewRouter(dbSession *mgo.Session, config *configs.Config) *mux.Router {
 	router := mux.NewRouter()
 
-	fmt.Println("Create controller")
+	log.Printf("Create controller")
 	controller := controllers.CreateNewActionLogController(dbSession, config)
 
-	fmt.Println("Define routes")
+	log.Printf("Define routes")
 	router.HandleFunc("/create", controller.CreateHandler).Methods("POST")
 	router.HandleFunc("/get", controller.IndexHandler).Methods("GET")
 
 	return router
 }
+
