@@ -1,15 +1,16 @@
 package configs
 
 import (
-    "io/ioutil"
-    "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 type Config struct {
-	ServerHost string `yaml:"server_host"`
-	MgoUrl     string `yaml:"mgo_url"`
-	MgoDb      string `yaml:"mgo_db"`
-	AuthToken  string `yaml:"auth_token"`
+	ServerHost    string `yaml:"server_host"`
+	MgoUrl        string `yaml:"mgo_url"`
+	MgoDb         string `yaml:"mgo_db"`
+	MgoCollection string `yaml:"mgo_collection"`
+	AuthToken     string `yaml:"auth_token"`
 }
 
 func CreateNewConfig() *Config {
@@ -21,13 +22,13 @@ func LoadConfigFile(configFilePath string) *Config {
 
 	configFileData, err := ioutil.ReadFile(configFilePath)
 
-	if (err != nil) {
+	if err != nil {
 		panic(err)
 	}
 
 	err = yaml.Unmarshal([]byte(configFileData), configData)
 
-	if (err != nil) {
+	if err != nil {
 		panic(err)
 	}
 

@@ -1,14 +1,10 @@
 package main
 
 import (
-	"intlogs/configs"
-	"intlogs/db"
-	"intlogs/middlewares"
-
+	"github.com/ildarusmanov/intlogs/configs"
+	"github.com/ildarusmanov/intlogs/db"
 	"fmt"
 	"path/filepath"
-
-	"github.com/WajoxSoftware/middleware"
 )
 
 func main() {
@@ -23,14 +19,7 @@ func main() {
 	defer dbSession.Close()
 
 	fmt.Println("Create router")
-	routerHandler := CreateNewRouterHandler(dbSession, config)
-
-	fmt.Println("Define middleware")
-	mware := middleware.CreateNewMiddleware()
-	mware.AddHandler(middlewares.CreateNewAuth(config.AuthToken))
-	mware.AddHandler(middlewares.CreateNewJsonOkResponse())
-	mware.AddHandler(routerHandler)
-
+	routerHandler := CreateNewRouter(dbSession, config)
 	fmt.Println("Start web-server")
-	StartServer(mware, config)
+	StartServer(routerHandler, config)
 }

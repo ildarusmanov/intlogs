@@ -3,20 +3,18 @@
 FROM golang:1.8
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/intlogs
+ADD . /go/src/github.com/ildarusmanov/intlogs
 
 # setup dependencies
-RUN go get github.com/WajoxSoftware/middleware
-RUN go get gopkg.in/mgo.v2
-RUN go get github.com/gorilla/mux
-RUN go get gopkg.in/validator.v2
-RUN go get gopkg.in/yaml.v2
+WORKDIR /go/src/github.com/ildarusmanov/intlogs
+RUN go get -u github.com/golang/dep/cmd/dep
+RUN dep ensure
 
-RUN go install intlogs
+RUN go install github.com/ildarusmanov/intlogs
 
 
 # Run the command by default when the container starts.
-ENTRYPOINT /go/bin/intlogs /go/src/intlogs/config.yml
+ENTRYPOINT /go/bin/intlogs /go/src/github.com/ildarusmanov/intlogs/config.yml
 
 # Document that the service listens on port 8080.
 EXPOSE 8000
