@@ -3,10 +3,10 @@
 FROM golang:1.8
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/intlogs
+ADD . /go/src/github.com/ildarusmanov/intlogs
 
 # setup dependencies
-WORKDIR /go/src/intlogs
+WORKDIR /go/src/github.com/ildarusmanov/intlogs
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN dep ensure
 
