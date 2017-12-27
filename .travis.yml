@@ -1,11 +1,9 @@
 language: go
 go:
   - 1.8.x
-go_import_path: github.com/ildarusmanov/intlogs
 services:
   - mongodb
 install:
-  - export PATH=$HOME/gopath/src/github.com/ildarusmanov:$PATH
   - go get -u github.com/golang/dep/cmd/dep
   - dep ensure
 script:

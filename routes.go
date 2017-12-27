@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"intlogs/configs"
-	"intlogs/controllers"
-	"intlogs/user"
+	"github.com/ildarusmanov/intlogs/configs"
+	"github.com/ildarusmanov/intlogs/controllers"
+	"github.com/ildarusmanov/intlogs/user"
 	"gopkg.in/mgo.v2"
 	"log"
 	"net/http"

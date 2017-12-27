@@ -1,8 +1,8 @@
 package main
 
 import (
-	"intlogs/configs"
-	"intlogs/db"
+	"github.com/ildarusmanov/intlogs/configs"
+	"github.com/ildarusmanov/intlogs/db"
 	"fmt"
 	"path/filepath"
 )

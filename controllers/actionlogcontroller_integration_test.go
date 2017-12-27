@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"intlogs/db"
-	"intlogs/models"
-	"intlogs/tests"
+	"github.com/ildarusmanov/intlogs/db"
+	"github.com/ildarusmanov/intlogs/models"
+	"github.com/ildarusmanov/intlogs/tests"
 
 	"bytes"
 	"encoding/json"

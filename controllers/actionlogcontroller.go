@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"intlogs/configs"
-	"intlogs/models"
-	"intlogs/stores"
+	"github.com/ildarusmanov/intlogs/configs"
+	"github.com/ildarusmanov/intlogs/models"
+	"github.com/ildarusmanov/intlogs/stores"
 
 	"encoding/json"
 	"github.com/gin-gonic/gin"
