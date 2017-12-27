@@ -6,11 +6,9 @@ FROM golang:1.8
 ADD . /go/src/intlogs
 
 # setup dependencies
-RUN go get github.com/WajoxSoftware/middleware
-RUN go get gopkg.in/mgo.v2
-RUN go get github.com/gorilla/mux
-RUN go get gopkg.in/validator.v2
-RUN go get gopkg.in/yaml.v2
+WORKDIR /go/src/intlogs
+RUN go get -u github.com/golang/dep/cmd/dep
+RUN dep ensure
 
 RUN go install intlogs
 

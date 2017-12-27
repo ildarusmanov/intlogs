@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/ildarusmanov/intlogs/configs"
-	"github.com/ildarusmanov/intlogs/models"
-	"github.com/ildarusmanov/intlogs/stores"
+	"intlogs/configs"
+	"intlogs/models"
+	"intlogs/stores"
 
 	"encoding/json"
 	"github.com/gin-gonic/gin"
@@ -43,7 +43,7 @@ func (c *ActionLogController) CreateHandler(context *gin.Context) {
 		panic(err)
 	}
 
-	context.JSON(http.StatusOk, log)
+	context.JSON(http.StatusOK, log)
 }
 
 func (c *ActionLogController) IndexHandler(context *gin.Context) {
@@ -60,5 +60,5 @@ func (c *ActionLogController) IndexHandler(context *gin.Context) {
 		panic(err)
 	}
 
-	context.JSON(http.StatusOk, logs)
+	context.JSON(http.StatusOK, logs)
 }

@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"github.com/ildarusmanov/intlogs/configs"
+	"intlogs/configs"
 
 	"path/filepath"
 )

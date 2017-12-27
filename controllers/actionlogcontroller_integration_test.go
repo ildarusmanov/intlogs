@@ -1,73 +1,64 @@
 package controllers
 
 import (
-	"github.com/ildarusmanov/intlogs/db"
-	"github.com/ildarusmanov/intlogs/models"
-	"github.com/ildarusmanov/intlogs/tests"
+	"intlogs/db"
+	"intlogs/models"
+	"intlogs/tests"
 
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestIndexHandler(t *testing.T) {
-	defer func() {
-		if r := recover(); r != nil {
-			t.Error("Error", r)
-		}
-	}()
-
 	config := tests.CreateConfig()
 	dbSession := db.CreateSession(config.MgoUrl)
 	defer dbSession.Close()
 
 	controller := CreateNewActionLogController(dbSession, config)
 
-	inBody := bytes.NewBufferString("")
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest("GET", "http://127.0.0.1:8000/get?page=0", inBody)
+	router := gin.New()
+	router.GET("/get", controller.IndexHandler)
 
-	controller.IndexHandler(w, r)
+	req  := httptest.NewRequest("GET", "http://127.0.0.1:8000/get?page=0", nil)
+	resp := httptest.NewRecorder()
 
-	resp := w.Result()
-	body, _ := ioutil.ReadAll(resp.Body)
+	router.ServeHTTP(resp, req)
+
+	body := []byte(resp.Body.String())
 	logs := models.MakeNewActionLogCollection()
 
 	if err := json.Unmarshal(body, &logs); err != nil {
-		t.Error("Invalid json response")
+		t.Error("Invalid json response: %s", resp.Body.String())
 	}
 }
 
 func TestCreateHandler(t *testing.T) {
-	defer func() {
-		if r := recover(); r != nil {
-			t.Error("Error", r)
-		}
-	}()
-
 	config := tests.CreateConfig()
 	dbSession := db.CreateSession(config.MgoUrl)
 	defer dbSession.Close()
 
 	controller := CreateNewActionLogController(dbSession, config)
+	
+	router := gin.New()
+	router.POST("/create", controller.CreateHandler)
 
 	bodyJson := "{\"ActionName\": \"authorized\", \"ActionTarget\": \"user\", \"ActionCost\": 1000, \"UserId\": \"some-user-id\", \"GuestUserId\": \"some-guest-id\", \"Url\": \"http://test.com\", \"CreatedAt\": 1712311}"
 	inBody := bytes.NewBufferString(bodyJson)
 
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest("POST", "http://127.0.0.1:8000/create", inBody)
+	req := httptest.NewRequest("POST", "http://127.0.0.1:8000/create", inBody)
+	resp := httptest.NewRecorder()
 
-	controller.CreateHandler(w, r)
+	router.ServeHTTP(resp, req)
 
-	resp := w.Result()
-	body, _ := ioutil.ReadAll(resp.Body)
-
+	body := []byte(resp.Body.String())
 	log := models.CreateNewActionLog()
 
 	if err := json.Unmarshal(body, log); err != nil {
-		t.Error("Invalid json response")
+		t.Error("Invalid json response: %s", resp.Body.String())
 	}
 
 	if log.ActionName != "authorized" {

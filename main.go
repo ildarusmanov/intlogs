@@ -1,14 +1,10 @@
 package main
 
 import (
-	"github.com/ildarusmanov/intlogs/configs"
-	"github.com/ildarusmanov/intlogs/db"
-	"github.com/ildarusmanov/intlogs/middlewares"
-
+	"intlogs/configs"
+	"intlogs/db"
 	"fmt"
 	"path/filepath"
-
-	"github.com/WajoxSoftware/middleware"
 )
 
 func main() {
@@ -23,7 +19,7 @@ func main() {
 	defer dbSession.Close()
 
 	fmt.Println("Create router")
-	routerHandler := CreateNewRouterHandler(dbSession, config)
+	routerHandler := CreateNewRouter(dbSession, config)
 	fmt.Println("Start web-server")
 	StartServer(routerHandler, config)
 }

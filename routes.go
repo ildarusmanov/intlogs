@@ -2,15 +2,15 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ildarusmanov/intlogs/configs"
-	"github.com/ildarusmanov/intlogs/controllers"
-	"github.com/ildarusmanov/intlogs/user"
+	"intlogs/configs"
+	"intlogs/controllers"
+	"intlogs/user"
 	"gopkg.in/mgo.v2"
 	"log"
 	"net/http"
 )
 
-func createNewRouter(dbSession *mgo.Session, config *configs.Config) *gin.Engine {
+func CreateNewRouter(dbSession *mgo.Session, config *configs.Config) *gin.Engine {
 	r := gin.Default()
 
 	log.Printf("Create controller")
@@ -18,16 +18,20 @@ func createNewRouter(dbSession *mgo.Session, config *configs.Config) *gin.Engine
 
 	log.Printf("Define routes")
 
-	r.Use(func(c *gin.Context) {
-		if !user.CreateNewAuth(config.AuthToken).ValidateRequest(c.Request) {
-			c.JSON(http.StatusForbidden, gin.H{"error": "invalid token"})
-		}
 
-		c.Next()
-	})
+	v1 := r.Group("/v1")
+	{
+		v1.Use(func(c *gin.Context) {
+			if !user.CreateNewAuth(config.AuthToken).ValidateRequest(c.Request) {
+				c.JSON(http.StatusForbidden, gin.H{"error": "invalid token"})
+			} else {
+				c.Next()
+			}
+		})
 
-	r.GET("/get", controller.IndexHandler)
-	r.POST("/create", controller.CreateHandler)
+		v1.GET("/get", controller.IndexHandler)
+		v1.POST("/create", controller.CreateHandler)
+	}
 
-	return router
+	return r
 }

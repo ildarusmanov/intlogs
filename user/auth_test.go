@@ -2,6 +2,8 @@ package user
 
 import (
 	"net/http/httptest"
+	"net/http"
+	"bytes"
 	"testing"
 )
 
@@ -11,7 +13,7 @@ func createHttpRequestExample(method, addr, token string, body string) *http.Req
 	req := httptest.NewRequest(
 		method,
 		addr,
-		bytes.NewBufferString,
+		bytes.NewBufferString(body),
 	)
 
 	SetAuthTokenHeader(token, req)
