@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	"intlogs/db"
-	"intlogs/models"
-	"intlogs/tests"
+	"github.com/ildarusmanov/intlogs/db"
+	"github.com/ildarusmanov/intlogs/models"
+	"github.com/ildarusmanov/intlogs/tests"
 
-	"io/ioutil"
 	"bytes"
-	"testing"
-	"net/http/httptest"
 	"encoding/json"
+	"io/ioutil"
+	"net/http/httptest"
+	"testing"
 )
 
 func TestIndexHandler(t *testing.T) {
@@ -34,10 +34,10 @@ func TestIndexHandler(t *testing.T) {
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
 	logs := models.MakeNewActionLogCollection()
-    
-    if err := json.Unmarshal(body, &logs); err != nil {
-   		t.Error("Invalid json response")
-    }
+
+	if err := json.Unmarshal(body, &logs); err != nil {
+		t.Error("Invalid json response")
+	}
 }
 
 func TestCreateHandler(t *testing.T) {
@@ -66,11 +66,11 @@ func TestCreateHandler(t *testing.T) {
 
 	log := models.CreateNewActionLog()
 
-    if err := json.Unmarshal(body, log); err != nil {
-   		t.Error("Invalid json response")
-    }
+	if err := json.Unmarshal(body, log); err != nil {
+		t.Error("Invalid json response")
+	}
 
-    if log.ActionName != "authorized" {
-    	t.Error("Incorrect data")
-    }
+	if log.ActionName != "authorized" {
+		t.Error("Incorrect data")
+	}
 }

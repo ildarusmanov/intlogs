@@ -1,9 +1,9 @@
 package main
 
 import (
-	"intlogs/configs"
-	"intlogs/db"
-	"intlogs/middlewares"
+	"github.com/ildarusmanov/intlogs/configs"
+	"github.com/ildarusmanov/intlogs/db"
+	"github.com/ildarusmanov/intlogs/middlewares"
 
 	"fmt"
 	"path/filepath"
@@ -24,13 +24,6 @@ func main() {
 
 	fmt.Println("Create router")
 	routerHandler := CreateNewRouterHandler(dbSession, config)
-
-	fmt.Println("Define middleware")
-	mware := middleware.CreateNewMiddleware()
-	mware.AddHandler(middlewares.CreateNewAuth(config.AuthToken))
-	mware.AddHandler(middlewares.CreateNewJsonOkResponse())
-	mware.AddHandler(routerHandler)
-
 	fmt.Println("Start web-server")
-	StartServer(mware, config)
+	StartServer(routerHandler, config)
 }

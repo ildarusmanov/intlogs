@@ -1,7 +1,7 @@
 package stores
 
 import (
-	"intlogs/models"
+	"github.com/ildarusmanov/intlogs/models"
 
 	"gopkg.in/mgo.v2"
 )

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"intlogs/configs"
+	"github.com/ildarusmanov/intlogs/configs"
 
 	"log"
 	"net/http"
