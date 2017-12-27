@@ -4,7 +4,7 @@ Action logs service
 ## Save some log data
 
 ```
-# POST /create?token=super-token
+# POST /v1/create?token=super-token
 {
    "ActionName":"action name",
    "ActionTarget":"action target",
@@ -24,7 +24,7 @@ Action logs service
 ## Get all logs
 
 ```
-# GET /get?token=super-token&page=0
+# GET /v1/get?token=super-token&page=0
 [
     {
         "Id": "599588207f1d2e7ca30541b7",
@@ -54,10 +54,22 @@ Action logs service
     }
 ]
 
+Run docker container
+```
+cd intlogs
+sudo docker build -t intlogs .
+// prod
+sudo docker run -d -p 10.90.137.73:8000:8000 --network host intlogs
+// or dev
+sudo docker run -p 8000:8000 --network host intlogs
+// list containers
+sudo docker ps
+```
+
 ```
 
 ## Run tests
 ```
 cd {project_directory}
-go test ./models ./controllers
+go test ./models ./controllers ./user
 ```
