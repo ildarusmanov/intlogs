@@ -1,5 +1,6 @@
 Action logs service
 ==========================
+[![Build Status](https://travis-ci.org/ildarusmanov/intlogs.svg?branch=master)](https://travis-ci.org/ildarusmanov/intlogs)
 
 ## Save some log data
 
