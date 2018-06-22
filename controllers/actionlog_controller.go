@@ -49,7 +49,7 @@ func (c *ActionLogController) CreateHandler(context *gin.Context) {
 }
 
 func (c *ActionLogController) IndexHandler(context *gin.Context) {
-	page := c.getPageFromContext(context)
+	page := c.getIntValFromContext("page", context)
 	filters := c.getFiltersFromContext(context)
 
 	logs := models.CreateNewActionLogCollection()
@@ -62,30 +62,38 @@ func (c *ActionLogController) IndexHandler(context *gin.Context) {
 	context.JSON(http.StatusOK, logs)
 }
 
-func (c *ActionLogController) getPageFromContext(context *gin.Context) int {
-	pageStr := context.Request.URL.Query().Get("page")
+func (c *ActionLogController) getFiltersFromContext(context *gin.Context) interface{} {
+	filters := bson.M{}
 
-	if pageStr == "" {
+	if userID := c.getStrFromContext("userId", context); userID != "" {
+		filters["user_id"] = userID
+	}
+
+	if createdFrom := c.getIntValFromContext("createdFrom", context); createdFrom != 0 {
+		filters["created_at"] = bson.M{"$gte": createdFrom}
+	}
+
+	if createdTo := c.getIntValFromContext("createdTo", context); createdTo != 0 {
+		filters["created_at"] = bson.M{"$lte": createdTo}
+	}
+
+	return filters
+}
+
+func (c *ActionLogController) getStrFromContext(key string, context *gin.Context) string {
+	return context.Request.URL.Query().Get(key)
+}
+
+func (c *ActionLogController) getIntValFromContext(key string, context *gin.Context) int {
+	str := context.Request.URL.Query().Get(key)
+
+	if str == "" {
 		return 0
 	}
 
-	if page, err := strconv.Atoi(pageStr); err == nil {
-		return page
+	if i, err := strconv.Atoi(str); err == nil {
+		return i
 	}
 
 	return 0
-}
-
-func (c *ActionLogController) getUserIdFromContext(context *gin.Context) string {
-	return context.Request.URL.Query().Get("userId")
-}
-
-func (c *ActionLogController) getFiltersFromContext(context *gin.Context) interface{} {
-	userId := c.getUserIdFromContext(context)
-
-	if userId == "" {
-		return nil
-	}
-
-	return bson.M{"user_id": userId}
 }
