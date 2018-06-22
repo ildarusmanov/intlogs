@@ -20,8 +20,8 @@ func (store *ActionLogStore) Save(log *models.ActionLog) (*models.ActionLog, err
 	return log, err
 }
 
-func (store *ActionLogStore) All(logs *models.ActionLogCollection, limit int, offset int) (*models.ActionLogCollection, error) {
-	err := store.collection.Find(nil).Limit(limit).Skip(offset).All(logs)
+func (store *ActionLogStore) All(logs *models.ActionLogCollection, filters interface{}, limit int, offset int) (*models.ActionLogCollection, error) {
+	err := store.collection.Find(filters).Limit(limit).Skip(offset).All(logs)
 
 	return logs, err
 }

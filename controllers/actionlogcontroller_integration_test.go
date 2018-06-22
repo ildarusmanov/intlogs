@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"github.com/ildarusmanov/intlogs/db"
-	"github.com/ildarusmanov/intlogs/models"
-	"github.com/ildarusmanov/intlogs/tests"
-
 	"bytes"
 	"encoding/json"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ildarusmanov/intlogs/db"
+	"github.com/ildarusmanov/intlogs/models"
+	"github.com/ildarusmanov/intlogs/tests"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +24,7 @@ func TestIndexHandler(t *testing.T) {
 	router := gin.New()
 	router.GET("/get", controller.IndexHandler)
 
-	req  := httptest.NewRequest("GET", "http://127.0.0.1:8000/get?page=0", nil)
+	req := httptest.NewRequest("GET", "http://127.0.0.1:8000/get?page=0", nil)
 	resp := httptest.NewRecorder()
 
 	router.ServeHTTP(resp, req)
@@ -31,9 +32,9 @@ func TestIndexHandler(t *testing.T) {
 	body := []byte(resp.Body.String())
 	logs := models.MakeNewActionLogCollection()
 
-	if err := json.Unmarshal(body, &logs); err != nil {
-		t.Error("Invalid json response: %s", resp.Body.String())
-	}
+	err := json.Unmarshal(body, &logs)
+
+	assert.Nil(t, err)
 }
 
 func TestCreateHandler(t *testing.T) {
@@ -42,7 +43,7 @@ func TestCreateHandler(t *testing.T) {
 	defer dbSession.Close()
 
 	controller := CreateNewActionLogController(dbSession, config)
-	
+
 	router := gin.New()
 	router.POST("/create", controller.CreateHandler)
 
@@ -57,11 +58,9 @@ func TestCreateHandler(t *testing.T) {
 	body := []byte(resp.Body.String())
 	log := models.CreateNewActionLog()
 
-	if err := json.Unmarshal(body, log); err != nil {
-		t.Error("Invalid json response: %s", resp.Body.String())
-	}
+	err := json.Unmarshal(body, log)
 
-	if log.ActionName != "authorized" {
-		t.Error("Incorrect data")
-	}
+	assert := assert.New(t)
+	assert.Nil(err)
+	assert.Equal(log.ActionName, "authorized")
 }

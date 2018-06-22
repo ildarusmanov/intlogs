@@ -6,11 +6,13 @@ import (
 	"github.com/ildarusmanov/intlogs/stores"
 
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/validator.v2"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"gopkg.in/validator.v2"
 )
 
 const (
@@ -47,18 +49,43 @@ func (c *ActionLogController) CreateHandler(context *gin.Context) {
 }
 
 func (c *ActionLogController) IndexHandler(context *gin.Context) {
-	page, err := strconv.Atoi(context.Request.URL.Query().Get("page"))
-
-	if err != nil {
-		page = 0
-	}
+	page := c.getPageFromContext(context)
+	filters := c.getFiltersFromContext(context)
 
 	logs := models.CreateNewActionLogCollection()
 	offset := PAGE_SIZE * page
 
-	if _, err := c.store.All(logs, PAGE_SIZE, offset); err != nil {
+	if _, err := c.store.All(logs, filters, PAGE_SIZE, offset); err != nil {
 		panic(err)
 	}
 
 	context.JSON(http.StatusOK, logs)
+}
+
+func (c *ActionLogController) getPageFromContext(context *gin.Context) int {
+	pageStr := context.Request.URL.Query().Get("page")
+
+	if pageStr == "" {
+		return 0
+	}
+
+	if page, err := strconv.Atoi(pageStr); err == nil {
+		return page
+	}
+
+	return 0
+}
+
+func (c *ActionLogController) getUserIdFromContext(context *gin.Context) string {
+	return context.Request.URL.Query().Get("userId")
+}
+
+func (c *ActionLogController) getFiltersFromContext(context *gin.Context) interface{} {
+	userId := c.getUserIdFromContext(context)
+
+	if userId == "" {
+		return nil
+	}
+
+	return bson.M{"user_id": userId}
 }

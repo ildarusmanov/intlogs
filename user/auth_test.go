@@ -1,10 +1,12 @@
 package user
 
 import (
-	"net/http/httptest"
-	"net/http"
 	"bytes"
+	"net/http"
+	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var authToken = "test-token"
@@ -24,13 +26,9 @@ func createHttpRequestExample(method, addr, token string, body string) *http.Req
 func TestCreateNewAuth(t *testing.T) {
 	auth := CreateNewAuth(authToken)
 
-	if auth == nil {
-		t.Error("Auth does not created")
-	}
-
-	if auth.GetToken() != authToken {
-		t.Error("Invalid token value")
-	}
+	assert := assert.New(t)
+	assert.NotNil(auth)
+	assert.Equal(auth.GetToken(), authToken)
 }
 
 func TestValidateMethod(t *testing.T) {
@@ -43,10 +41,6 @@ func TestValidateMethod(t *testing.T) {
 		"{}",
 	)
 
-	if !auth.ValidateRequest(validTokenReq) {
-		t.Error("Correct token does not accepted")
-	}
-
 	invalidTokenReq := createHttpRequestExample(
 		"POST",
 		"http://test.com/test_url.html",
@@ -54,7 +48,7 @@ func TestValidateMethod(t *testing.T) {
 		"{}",
 	)
 
-	if auth.ValidateRequest(invalidTokenReq) {
-		t.Error("Incorrect token accepted")
-	}
+	assert := assert.New(t)
+	assert.True(auth.ValidateRequest(validTokenReq))
+	assert.False(auth.ValidateRequest(invalidTokenReq))
 }
