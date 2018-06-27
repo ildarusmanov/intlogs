@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -34,20 +35,12 @@ func (f *Filters) ParseQuery() interface{} {
 		filters["action_target"] = target
 	}
 
-	if createdFrom := f.getIntValFromContext("createdFrom"); createdFrom != 0 {
-		filters["created_at"] = bson.M{"$gte": createdFrom}
+	if costFilters, err := f.getCostFilters(); err == nil {
+		filters["action_cost"] = costFilters
 	}
 
-	if createdTo := f.getIntValFromContext("createdTo"); createdTo != 0 {
-		filters["created_at"] = bson.M{"$lte": createdTo}
-	}
-
-	if costFrom := f.getIntValFromContext("costFrom"); costFrom != 0 {
-		filters["action_cost"] = bson.M{"$gte": costFrom}
-	}
-
-	if costTo := f.getIntValFromContext("costTo"); costTo != 0 {
-		filters["action_cost"] = bson.M{"$gte": costTo}
+	if createdFilters, err := f.getCreatedFilters(); err == nil {
+		filters["created_at"] = createdFilters
 	}
 
 	if cost := f.getIntValFromContext("cost"); cost != 0 {
@@ -55,6 +48,52 @@ func (f *Filters) ParseQuery() interface{} {
 	}
 
 	return filters
+}
+
+func (f *Filters) getCreatedFilters() (interface{}, error) {
+	createdFrom := f.getIntValFromContext("createdFrom")
+	createdTo := f.getIntValFromContext("createdTo")
+
+	if createdFrom == 0 && createdTo == 0 {
+		return nil, errors.New("No filters")
+	}
+	createdFitlers := bson.M{}
+
+	if createdFrom != 0 {
+		createdFitlers["$gte"] = createdFrom
+	}
+
+	if createdTo != 0 {
+		createdFitlers["$lte"] = createdTo
+	}
+
+	return createdFitlers, nil
+}
+
+func (f *Filters) getCostFilters() (interface{}, error) {
+	costFrom := f.getIntValFromContext("costFrom")
+	costTo := f.getIntValFromContext("costTo")
+	cost := f.getIntValFromContext("cost")
+
+	if cost != 0 {
+		return cost, nil
+	}
+
+	if costFrom == 0 && costTo == 0 {
+		return nil, errors.New("No filters")
+	}
+
+	costFitlers := bson.M{}
+
+	if costFrom != 0 {
+		costFitlers["$gte"] = costFrom
+	}
+
+	if costTo != 0 {
+		costFitlers["$lte"] = costTo
+	}
+
+	return costFitlers, nil
 }
 
 func (f *Filters) getStrFromContext(key string) string {
