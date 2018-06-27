@@ -43,27 +43,24 @@ func (f *Filters) ParseQuery() interface{} {
 		filters["created_at"] = createdFilters
 	}
 
-	if cost := f.getIntValFromContext("cost"); cost != 0 {
-		filters["action_cost"] = cost
-	}
-
 	return filters
 }
 
 func (f *Filters) getCreatedFilters() (interface{}, error) {
-	createdFrom := f.getIntValFromContext("createdFrom")
-	createdTo := f.getIntValFromContext("createdTo")
+	createdFrom, errFrom := f.getIntValFromContext("createdFrom")
+	createdTo, errTo := f.getIntValFromContext("createdTo")
 
-	if createdFrom == 0 && createdTo == 0 {
+	if errFrom != nil && errTo != nil {
 		return nil, errors.New("No filters")
 	}
+
 	createdFitlers := bson.M{}
 
-	if createdFrom != 0 {
+	if errFrom == nil {
 		createdFitlers["$gte"] = createdFrom
 	}
 
-	if createdTo != 0 {
+	if errTo == nil {
 		createdFitlers["$lte"] = createdTo
 	}
 
@@ -71,45 +68,47 @@ func (f *Filters) getCreatedFilters() (interface{}, error) {
 }
 
 func (f *Filters) getCostFilters() (interface{}, error) {
-	costFrom := f.getIntValFromContext("costFrom")
-	costTo := f.getIntValFromContext("costTo")
-	cost := f.getIntValFromContext("cost")
+	costFrom, errFrom := f.getIntValFromContext("costFrom")
+	costTo, errTo := f.getIntValFromContext("costTo")
+	cost, err := f.getIntValFromContext("cost")
 
-	if cost != 0 {
+	if err == nil {
 		return cost, nil
 	}
 
-	if costFrom == 0 && costTo == 0 {
+	if errFrom != nil && errTo != nil {
 		return nil, errors.New("No filters")
 	}
 
-	costFitlers := bson.M{}
+	costFilters := bson.M{}
 
-	if costFrom != 0 {
-		costFitlers["$gte"] = costFrom
+	if errFrom == nil {
+		costFilters["$gte"] = costFrom
 	}
 
-	if costTo != 0 {
-		costFitlers["$lte"] = costTo
+	if errTo == nil {
+		costFilters["$lte"] = costTo
 	}
 
-	return costFitlers, nil
+	return costFilters, nil
 }
 
 func (f *Filters) getStrFromContext(key string) string {
 	return f.context.Request.URL.Query().Get(key)
 }
 
-func (f *Filters) getIntValFromContext(key string) int {
+func (f *Filters) getIntValFromContext(key string) (int, error) {
 	str := f.getStrFromContext(key)
 
 	if str == "" {
-		return 0
+		return 0, errors.New("Empty")
 	}
 
-	if i, err := strconv.Atoi(str); err == nil {
-		return i
+	i, err := strconv.Atoi(str)
+
+	if err != nil {
+		return 0, err
 	}
 
-	return 0
+	return i, nil
 }
