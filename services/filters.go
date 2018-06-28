@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
@@ -19,20 +20,24 @@ func CreateNewFilters(ctx *gin.Context) *Filters {
 func (f *Filters) ParseQuery() interface{} {
 	filters := bson.M{}
 
-	if userID := f.getStrFromContext("userId"); userID != "" {
-		filters["user_id"] = userID
+	if userIDFilters, err := f.getUserIDFilters(); err == nil {
+		filters["user_id"] = userIDFilters
 	}
 
 	if guestUserID := f.getStrFromContext("guestUserId"); guestUserID != "" {
 		filters["guest_user_id"] = guestUserID
 	}
 
-	if name := f.getStrFromContext("name"); name != "" {
-		filters["action_name"] = name
+	if nameFilters, err := f.getNameFilters(); err == nil {
+		filters["action_name"] = nameFilters
 	}
 
-	if target := f.getStrFromContext("target"); target != "" {
-		filters["action_target"] = target
+	if targetIDFilters, err := f.getTargetIDFilters(); err == nil {
+		filters["action_target_id"] = targetIDFilters
+	}
+
+	if targetFilters, err := f.getTargetFilters(); err == nil {
+		filters["action_target"] = targetFilters
 	}
 
 	if costFilters, err := f.getCostFilters(); err == nil {
@@ -44,6 +49,62 @@ func (f *Filters) ParseQuery() interface{} {
 	}
 
 	return filters
+}
+
+func (f *Filters) getNameFilters() (interface{}, error) {
+	if name := f.getStrFromContext("name"); name != "" {
+		return name, nil
+	}
+
+	if names := f.getStrFromContext("names"); names != "" {
+		namesArr := strings.Split(names, ",")
+
+		return bson.M{"$in": namesArr}, nil
+	}
+
+	return nil, errors.New("No filters")
+}
+
+func (f *Filters) getTargetFilters() (interface{}, error) {
+	if target := f.getStrFromContext("target"); target != "" {
+		return target, nil
+	}
+
+	if targets := f.getStrFromContext("targets"); targets != "" {
+		targetsArr := strings.Split(targets, ",")
+
+		return bson.M{"$in": targetsArr}, nil
+	}
+
+	return nil, errors.New("No filters")
+}
+
+func (f *Filters) getTargetIDFilters() (interface{}, error) {
+	if targetID := f.getStrFromContext("targetId"); targetID != "" {
+		return targetID, nil
+	}
+
+	if targetIDs := f.getStrFromContext("targetIds"); targetIDs != "" {
+		targetIDsArr := strings.Split(targetIDs, ",")
+
+		return bson.M{"$in": targetIDsArr}, nil
+	}
+
+	return nil, errors.New("No filters")
+}
+
+func (f *Filters) getUserIDFilters() (interface{}, error) {
+	if userID := f.getStrFromContext("userId"); userID != "" {
+		return userID, nil
+	}
+
+	if userIDs := f.getStrFromContext("userIds"); userIDs != "" {
+		userIDsArr := strings.Split(userIDs, ",")
+
+		return bson.M{"$in": userIDsArr}, nil
+	}
+
+	return nil, errors.New("No filters")
 }
 
 func (f *Filters) getCreatedFilters() (interface{}, error) {

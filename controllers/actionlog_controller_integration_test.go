@@ -47,7 +47,7 @@ func TestCreateHandler(t *testing.T) {
 	router := gin.New()
 	router.POST("/create", controller.CreateHandler)
 
-	bodyJson := "{\"ActionName\": \"authorized\", \"ActionTarget\": \"user\", \"ActionCost\": 1000, \"UserId\": \"some-user-id\", \"GuestUserId\": \"some-guest-id\", \"Url\": \"http://test.com\", \"CreatedAt\": 1712311}"
+	bodyJson := "{\"ActionName\": \"authorized\", \"ActionTarget\": \"user\", \"ActionTargetId\": \"1\", \"ActionCost\": 1000, \"UserId\": \"some-user-id\", \"GuestUserId\": \"some-guest-id\", \"Url\": \"http://test.com\", \"CreatedAt\": 1712311}"
 	inBody := bytes.NewBufferString(bodyJson)
 
 	req := httptest.NewRequest("POST", "http://127.0.0.1:8000/create", inBody)

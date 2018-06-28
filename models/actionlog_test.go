@@ -16,6 +16,7 @@ func TestValidators(t *testing.T) {
 	validLog := CreateNewActionLog()
 	validLog.ActionName = "authorized"
 	validLog.ActionTarget = "user"
+	validLog.ActionTargetId = "1"
 	validLog.ActionCost = 1000
 	validLog.UserId = "some-user-id"
 	validLog.GuestUserId = "some-guest-id"

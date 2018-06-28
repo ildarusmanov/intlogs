@@ -25,7 +25,7 @@ func CreateNewRouter(dbSession *mgo.Session, config *configs.Config) *gin.Engine
 	{
 		v1.Use(func(c *gin.Context) {
 			if !user.CreateNewAuth(config.AuthToken).ValidateRequest(c.Request) {
-				c.JSON(http.StatusForbidden, gin.H{"error": "invalid token"})
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "invalid token"})
 			} else {
 				c.Next()
 			}

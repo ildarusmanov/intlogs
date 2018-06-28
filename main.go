@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/ildarusmanov/intlogs/configs"
 	"github.com/ildarusmanov/intlogs/db"
-	"fmt"
 	"path/filepath"
 )
 
