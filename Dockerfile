@@ -16,5 +16,5 @@ RUN go install github.com/ildarusmanov/intlogs
 # Run the command by default when the container starts.
 ENTRYPOINT /go/bin/intlogs /go/src/github.com/ildarusmanov/intlogs/config.yml
 
-# Document that the service listens on port 8080.
-EXPOSE 8000
+# Document that the service listens on port 8003.
+EXPOSE 8003

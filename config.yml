@@ -1,4 +1,4 @@
-server_host: "127.0.0.1:8000"
+server_host: "127.0.0.1:8003"
 mgo_url: "localhost"
 mgo_db: "intlogs"
 mgo_collection: "action_logs"
