@@ -97,9 +97,9 @@ git clone [repo]
 cd intlogs
 sudo docker build -t intlogs .
 // prod
-sudo docker run -d -p 10.90.137.73:8000:8000 --network host intlogs
+sudo docker run -d -p 10.90.137.73:8003:8003 --network host intlogs
 // or dev
-sudo docker run -p 8000:8000 --network host intlogs
+sudo docker run -p 8003:8003 --network host intlogs
 // list containers
 sudo docker ps
 ```
