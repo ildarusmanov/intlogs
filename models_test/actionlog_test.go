@@ -13,15 +13,15 @@ import (
 
 var _ = Describe("Actionlog", func() {
 	var (
-		actionName string
-		actionTarget string
+		actionName     string
+		actionTarget   string
 		actionTargetId string
-		actionCost int64
-		userId string
-		guestUserId string
-		url string
-		createdAt int64
-		params bson.M
+		actionCost     int64
+		userId         string
+		guestUserId    string
+		url            string
+		createdAt      int64
+		params         bson.M
 
 		emptyModel *ActionLog
 		validModel *ActionLog
@@ -52,21 +52,21 @@ var _ = Describe("Actionlog", func() {
 		validModel.Params = params
 	})
 
-    Describe("Empty ActionLog", func() {
-        Context("Empty model", func() {
-            It("Should not be nil", func() {
+	Describe("Empty ActionLog", func() {
+		Context("Empty model", func() {
+			It("Should not be nil", func() {
 				Expect(emptyModel).NotTo(BeNil())
 			})
 
 			It("Should not be valid", func() {
 				Expect(validator.Validate(emptyModel)).NotTo(BeNil())
 			})
-        })
+		})
 	})
-	
-    Describe("Not Empty ActionLog", func() {
-        Context("Filled model", func() {
-            It("Should have all attributes", func() {
+
+	Describe("Not Empty ActionLog", func() {
+		Context("Filled model", func() {
+			It("Should have all attributes", func() {
 				Expect(validModel).NotTo(BeNil())
 				Expect(validModel.ActionName).To(Equal(actionName))
 				Expect(validModel.ActionTarget).To(Equal(actionTarget))
@@ -82,6 +82,6 @@ var _ = Describe("Actionlog", func() {
 			It("Should be valid", func() {
 				Expect(validator.Validate(validModel)).To(BeNil())
 			})
-        })
-    })
+		})
+	})
 })

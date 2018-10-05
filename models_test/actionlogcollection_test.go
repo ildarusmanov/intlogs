@@ -16,11 +16,11 @@ var _ = Describe("Actionlogcollection", func() {
 		collection = CreateNewActionLogCollection()
 	})
 
-    Describe("Create collection", func() {
-        Context("Empty collection", func() {
-            It("Should not be empty", func () {
+	Describe("Create collection", func() {
+		Context("Empty collection", func() {
+			It("Should not be empty", func() {
 				Expect(collection).NotTo(BeNil())
 			})
-        })
-    })
+		})
+	})
 })
